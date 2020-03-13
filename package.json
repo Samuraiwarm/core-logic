@@ -3,5 +3,9 @@
   "private": true,
   "devDependencies": {
     "lerna": "^3.20.2"
+  },
+  "dependencies": {
+    "hilbert-qr-code": "file:packages/hilbert-qr-code",
+    "hilbert-room-assignment": "file:packages/hilbert-room-assignment"
   }
 }
