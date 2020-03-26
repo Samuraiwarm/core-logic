@@ -192,17 +192,13 @@ export const roomAssignmentByRoomOccupancy = ({
 	}
 	
 	// Find minimum number of rooms needed for reservation
-	// const roomListSortedSeveralRooms = roomListSorted.filter(item => item.availableCount < guestCount);
-	// if (roomListSortedSeveralRooms.length === 0) {
-	// 	return resultOneRoom.slice(0, query); // Not enough configurations that satisfy conditions
-	// }
 	let minimumRoomsNeeded = 0;
 	let topRoomSelectedCount = 0;
 	while (guestCount > topRoomSelectedCount) {
-		console.log(minimumRoomsNeeded)
 		topRoomSelectedCount += roomListSorted[minimumRoomsNeeded].availableCount;
 		minimumRoomsNeeded++;
 	}
+	// Ig nore the case of single room as it has already bee calculated
 	minimumRoomsNeeded = minimumRoomsNeeded !== 1 ? minimumRoomsNeeded : 2;
 
 	// Greedy algorithm to select top rooms with highest availableCount
@@ -322,30 +318,30 @@ export const roomAssignmentByRoomOccupancy = ({
 	// ];
 }
 
-// Example uses
+// // // Example uses
 
-console.log(
-	checkAvailabilityOfHotel(
-		{
-			roomList:[
-				{
-					roomID:'shiba',price:10,availableCount:10
-				},
-				{
-					roomID:'shiba',price:10,availableCount:10
-				},
-				{
-					roomID:'shiba',price:10,availableCount:10
-				},
-				{
-					roomID:'shiba',price:10,availableCount:10
-				}
-			],
-			guestCount:41
-		}
-	)
-)
-// returns false
+// // console.log(
+// // 	checkAvailabilityOfHotel(
+// // 		{
+// // 			roomList:[
+// // 				{
+// // 					roomID:'shiba',price:10,availableCount:10
+// // 				},
+// // 				{
+// // 					roomID:'shiba',price:10,availableCount:10
+// // 				},
+// // 				{
+// // 					roomID:'shiba',price:10,availableCount:10
+// // 				},
+// // 				{
+// // 					roomID:'shiba',price:10,availableCount:10
+// // 				}
+// // 			],
+// // 			guestCount:41
+// // 		}
+// // 	)
+// // )
+// // // returns false
 
 // console.log(JSON.stringify(roomAssignmentByPrice(
 // 	{
@@ -366,35 +362,35 @@ console.log(
 // 		guestCount:10,
 // 		query:10}
 // )))
-// returns [{"roomConfig":[{"roomID":"shiba","guestCount":69}],"price":420},{"roomConfig":[{"roomID":"doge","guestCount":114514}],"price":1919}]
+// // // returns [{"roomConfig":[{"roomID":"shiba","guestCount":69}],"price":420},{"roomConfig":[{"roomID":"doge","guestCount":114514}],"price":1919}]
 
-console.log(JSON.stringify(roomAssignmentByRoomOccupancy(
-	{
-		roomList:[
-			// {
-			// 	roomID:'27',price:10,availableCount:27
-			// },
-			// {
-			// 	roomID:'28',price:10,availableCount:28
-			// },
-			// {
-			// 	roomID:'29',price:10,availableCount:29
-			// },
-			// {
-			// 	roomID:'47',price:10,availableCount:40
-			// },
-			{
-				roomID:'48',price:20,availableCount:48
-			},
-			{
-				roomID:'49',price:30,availableCount:49
-			},
-			{
-				roomID:'50',price:40,availableCount:50
-			}
-		],
-		guestCount:49,
-		query:30
-	}
-)))
-// returns [ { roomID: 'shiba', guestCount: 114514 } ]
+// // console.log(JSON.stringify(roomAssignmentByRoomOccupancy(
+// // 	{
+// // 		roomList:[
+// // 			// {
+// // 			// 	roomID:'27',price:10,availableCount:27
+// // 			// },
+// // 			// {
+// // 			// 	roomID:'28',price:10,availableCount:28
+// // 			// },
+// // 			// {
+// // 			// 	roomID:'29',price:10,availableCount:29
+// // 			// },
+// // 			// {
+// // 			// 	roomID:'47',price:10,availableCount:40
+// // 			// },
+// // 			{
+// // 				roomID:'48',price:20,availableCount:48
+// // 			},
+// // 			{
+// // 				roomID:'49',price:30,availableCount:49
+// // 			},
+// // 			{
+// // 				roomID:'50',price:40,availableCount:50
+// // 			}
+// // 		],
+// // 		guestCount:49,
+// // 		query:30
+// // 	}
+// // )))
+// // // returns [ { roomID: 'shiba', guestCount: 114514 } ]
