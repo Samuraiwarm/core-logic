@@ -1,25 +1,25 @@
 /**
  * Function checkAvailabilityOfHotel
- * check whether or not the hostel has enough space for given number of guests `guestCount`
+ * check whether or not the hostel has enough space for given number of guests `guests`
  * @param {Object[]} roomList List of rooms available
- * @param {string} roomList[].roomID ID of rooms
- * @param {number} roomList[].availableCount Number of available beds in the room
- * @param {number} guestCount Number of guests to book
- * @returns {boolean} Is the number of available beds more than `guestCount`?
+ * @param {string} roomList[].id ID of rooms
+ * @param {number} roomList[].available Number of available beds in the room
+ * @param {number} guests Number of guests to book
+ * @returns {boolean} Is the number of available beds more than `guests`?
  */
 
 export const checkAvailabilityOfHotel = ({
 	roomList,
-	guestCount,
+	guests,
 }: {
 	roomList: {
-		roomID: string;
+		id: string;
 		price: number;
-		availableCount: number;
+		available: number;
 	}[];
-	guestCount: number;
+	guests: number;
 }) : boolean => {
-	return roomList.reduce((acc, val) => acc + val.availableCount, 0) >= guestCount;
+	return roomList.reduce((acc, val) => acc + val.available, 0) >= guests;
 }
 
 /**
@@ -30,50 +30,62 @@ export const checkAvailabilityOfHotel = ({
  * => 1st rank (room1 * 5ppl & room2 * 3ppl)
  * => 2nd rank (room1 * 4ppl & room2 * 4ppl)
  * @param {Object[]} roomList List of rooms available
- * @param {string} roomList[].roomID ID of rooms
+ * @param {string} roomList[].id ID of rooms
  * @param {number} roomList[].price Price of room
- * @param {number} roomList[].availableCount Number of available beds in the room
- * @param {number} guestCount Number of guests to book
+ * @param {number} roomList[].available Number of available beds in the room
+ * @param {number} guests Number of guests to book
  * @param {number} query Number of configurations for top `query` lowest price
- * @returns {Object[]: {roomConfig: {roomID: string, guestCount: number, price: number}[], totalPrice: number}[]}
- * 		returns list of configurations `roomConfig` that includes the ID `roomID` and
- * 		the number of guests `guestCount` that will occupy in the room `roomID`, and
+ * @returns {Object[]: {roomConfig: {id: string, guests: number, price: number}[], totalPrice: number}[]}
+ * 		returns list of configurations `roomConfig` that includes the ID `id` and
+ * 		the number of guests `guests` that will occupy in the room `id`, and
  * 		the price of each configurations
  * If `checkAvailabilityOfHotel` fails, this function throws an error "Not enough space."
  */
 
 export const roomAssignmentByPrice = ({
 	roomList,
-	guestCount,
+	guests,
 	query,
 }: {
 	roomList: {
-		roomID: string;
+		id: string;
 		price: number;
-		availableCount: number;
+		available: number;
 	}[];
-	guestCount: number;
+	guests: number;
 	query: number;
 }) : {
 	roomConfig: {
-		roomID: string,
-		guestCount: number,
+		id: string,
+		guests: number,
 		price: number,
 	}[],
 	totalPrice: number
 }[] => {
 	if (!checkAvailabilityOfHotel({
 		roomList: roomList,
-		guestCount: guestCount
+		guests: guests
 	})) {
 		throw Error('Not enough space.');
 	}
+	let result : {
+		roomConfig: {
+			id: string,
+			guests: number,
+			price: number,
+		}[],
+		totalPrice: number
+	}[] = [];
+	const roomListSorted = roomList.concat().sort((a, b) => a.price - b.price);
+	let pointerArray : number[] = [0, roomList.length];
+	
+
 	return [
 		{
 			roomConfig: [
 				{
-					roomID: 'shiba',
-					guestCount: 69,
+					id: 'shiba',
+					guests: 69,
 					price: 6969,
 				}
 			],
@@ -82,8 +94,8 @@ export const roomAssignmentByPrice = ({
 		{
 			roomConfig: [
 				{
-					roomID: 'doge',
-					guestCount: 114514,
+					id: 'doge',
+					guests: 114514,
 					price: 123
 				}
 			],
@@ -111,62 +123,62 @@ export const roomAssignmentByPrice = ({
  * => 1st rank (room1 * 5ppl & room2 * 3ppl)
  * => 2nd rank (room1 * 4ppl & room2 * 4ppl)
  * @param {Object[]} roomList List of rooms available
- * @param {string} roomList[].roomID ID of rooms
+ * @param {string} roomList[].id ID of rooms
  * @param {number} roomList[].price Price of room
- * @param {number} roomList[].availableCount Number of available beds in the room
- * @param {number} guestCount Number of guests to book.
+ * @param {number} roomList[].available Number of available beds in the room
+ * @param {number} guests Number of guests to book.
  * @param {number} query Number of configurations for top `query` lowest price
- * @returns {Object[]: {roomConfig: {roomID: string, guestCount: number, price: number}[], totalPrice: number}[]}
- * 		Returns list of configurations `roomConfig` that includes the ID `roomID` and
- * 		the number of guests `guestCount` that will occupy in the room `roomID`, and
+ * @returns {Object[]: {roomConfig: {id: string, guests: number, price: number}[], totalPrice: number}[]}
+ * 		Returns list of configurations `roomConfig` that includes the ID `id` and
+ * 		the number of guests `guests` that will occupy in the room `id`, and
  * 		the price of each configurations
  * If `checkAvailabilityOfHotel` fails, this function throws an error "Not enough space."
   */
 
 export const roomAssignmentByRoomOccupancy = ({
 	roomList,
-	guestCount,
+	guests,
 	query,
 }: {
 	roomList: {
-		roomID: string;
+		id: string;
 		price: number;
-		availableCount: number;
+		available: number;
 	}[];
-	guestCount: number;
+	guests: number;
 	query: number;
 }) : {
 	roomConfig: {
-		roomID: string,
-		guestCount: number,
+		id: string,
+		guests: number,
 		price: number,
 	}[],
 	totalPrice: number
 }[] => {
 	if (!checkAvailabilityOfHotel({
 		roomList: roomList,
-		guestCount: guestCount
+		guests: guests
 	})) {
 		throw Error('Not enough space.');
 	}
 	let resultOneRoom : {
 		roomConfig: {
-			roomID: string,
-			guestCount: number,
+			id: string,
+			guests: number,
 			price: number,
 		}[],
 		totalPrice: number
 	}[] = [];
 	let resultMultipleRooms : {
 		roomConfig: {
-			roomID: string,
-			guestCount: number,
+			id: string,
+			guests: number,
 			price: number,
 		}[],
 		totalPrice: number
 	}[] = [];
-	const roomListSorted = roomList.concat().sort((a, b) => b.availableCount - a.availableCount);
-	const roomListSortedOneRoom = roomListSorted.filter(item => item.availableCount >= guestCount);
+	const roomListSorted = roomList.concat().sort((a, b) => b.available - a.available);
+	const roomListSortedOneRoom = roomListSorted.filter(item => item.available >= guests);
 
 	// Suggest room configuration that can fit all guests
 	if (roomListSortedOneRoom.length > 0) {
@@ -176,12 +188,12 @@ export const roomAssignmentByRoomOccupancy = ({
 					roomConfig:
 					[
 						{
-							roomID: item.roomID,
-							guestCount: guestCount,
+							id: item.id,
+							guests: guests,
 							price: item.price
 						}
 					],
-					totalPrice: item.price*guestCount,
+					totalPrice: item.price*guests,
 				}
 			}
 		);
@@ -194,20 +206,20 @@ export const roomAssignmentByRoomOccupancy = ({
 	// Find minimum number of rooms needed for reservation
 	let minimumRoomsNeeded = 0;
 	let topRoomSelectedCount = 0;
-	while (guestCount > topRoomSelectedCount) {
-		topRoomSelectedCount += roomListSorted[minimumRoomsNeeded].availableCount;
+	while (guests > topRoomSelectedCount) {
+		topRoomSelectedCount += roomListSorted[minimumRoomsNeeded].available;
 		minimumRoomsNeeded++;
 	}
 	// Ig nore the case of single room as it has already bee calculated
 	minimumRoomsNeeded = minimumRoomsNeeded !== 1 ? minimumRoomsNeeded : 2;
 
-	// Greedy algorithm to select top rooms with highest availableCount
+	// Greedy algorithm to select top rooms with highest `available`
 	// Generate all subsets of an array of given length minimumRoomsNeeded
 	while (resultOneRoom.length + resultMultipleRooms.length < query && minimumRoomsNeeded <= roomListSorted.length) {
-		let pointerArray: number[] = Array.apply(null, {length: minimumRoomsNeeded}).map(Number.call, Number); //asubset
+		let pointerArray: number[] = Array.apply(null, {length: minimumRoomsNeeded}).map(Number.call, Number);
 		pointerArray.push(roomListSorted.length); // Boundary of array
-		let isFillable = true; //r
-		let pointerArrayPointer = 0; //start
+		let isFillable = true;
+		let pointerArrayPointer = 0;
 
 		while (isFillable) {
 			isFillable = false;
@@ -217,23 +229,23 @@ export const roomAssignmentByRoomOccupancy = ({
 				roomConfig: subsetRoomList.map(item =>
 					{
 						return {
-							roomID: item.roomID,
-							guestCount: item.availableCount,
+							id: item.id,
+							guests: item.available,
 							price: item.price,
 						}
 					}
-				).sort((a, b) => b.guestCount - a.guestCount),
+				).sort((a, b) => b.guests - a.guests),
 				totalPrice: 0
 			};
-			let overcount = config.roomConfig.reduce((acc, val) => acc + val.guestCount, 0) - guestCount;
+			let overcount = config.roomConfig.reduce((acc, val) => acc + val.guests, 0) - guests;
 			if (overcount >= 0) {
 				while (overcount > 0) {
-					// Maximizing the distribution metric by removing the overcount with high guestCount first
-					config.roomConfig[0].guestCount--;
+					// Maximizing the distribution metric by removing the overcount with high guests first
+					config.roomConfig[0].guests--;
 					overcount--;
-					config.roomConfig.sort((a, b) => b.guestCount - a.guestCount);
+					config.roomConfig.sort((a, b) => b.guests - a.guests);
 				}
-				config.totalPrice = config.roomConfig.reduce((acc, val) => acc + val.guestCount*val.price, 0);
+				config.totalPrice = config.roomConfig.reduce((acc, val) => acc + val.guests*val.price, 0);
 				resultMultipleRooms.push(config);
 
 				// Increment index
@@ -248,7 +260,7 @@ export const roomAssignmentByRoomOccupancy = ({
 					}
 				}
 			} else {
-				// Skip pointerArray that has availableCount total strictly less than current pointerArray's availableCount
+				// Skip pointerArray that has `available` total strictly less than current pointerArray's `available`
 				let i: number;
 				for (i = pointerArray.length-2; i > 0; i--) {
 					if (pointerArray[i] - pointerArray[i-1] >= 2) {
@@ -273,7 +285,7 @@ export const roomAssignmentByRoomOccupancy = ({
 			return a.roomConfig.length - b.roomConfig.length;
 		}
 		// if (a.roomConfig.length === 1 && b.roomConfig.length === 1) {
-		// 	return a.roomConfig[0].guestCount - b.roomConfig[0].guestCount;
+		// 	return a.roomConfig[0].guests - b.roomConfig[0].guests;
 		// }
 		// if (a.roomConfig.length === 1) {
 		// 	return 1;
@@ -281,10 +293,10 @@ export const roomAssignmentByRoomOccupancy = ({
 		// if (b.roomConfig.length === 1) {
 		// 	return -1;
 		// }
-		if (a.roomConfig.reduce((acc, val) => acc * val.guestCount, 1)
-		!== b.roomConfig.reduce((acc, val) => acc * val.guestCount, 1)) {
-			return b.roomConfig.reduce((acc, val) => acc * val.guestCount, 1)
-			- a.roomConfig.reduce((acc, val) => acc * val.guestCount, 1);
+		if (a.roomConfig.reduce((acc, val) => acc * val.guests, 1)
+		!== b.roomConfig.reduce((acc, val) => acc * val.guests, 1)) {
+			return b.roomConfig.reduce((acc, val) => acc * val.guests, 1)
+			- a.roomConfig.reduce((acc, val) => acc * val.guests, 1);
 		}
 		return b.totalPrice - a.totalPrice;
 	});
@@ -293,8 +305,8 @@ export const roomAssignmentByRoomOccupancy = ({
 	// 	{
 	// 		roomConfig: [
 	// 			{
-	// 				roomID: 'shiba',
-	// 				guestCount: 114514,
+	// 				id: 'shiba',
+	// 				guests: 114514,
 	// 				price: 1231,
 	// 			}
 	// 		],
@@ -303,13 +315,13 @@ export const roomAssignmentByRoomOccupancy = ({
 	// 	{
 	// 		roomConfig: [
 	// 			{
-	// 				roomID: 'doge',
-	// 				guestCount: 420,
+	// 				id: 'doge',
+	// 				guests: 420,
 	// 				price: 123,
 	// 			},
 	// 			{
-	// 				roomID: 'uwu',
-	// 				guestCount: 69,
+	// 				id: 'uwu',
+	// 				guests: 69,
 	// 				price: 123,
 	// 			}
 	// 		],
@@ -325,19 +337,19 @@ export const roomAssignmentByRoomOccupancy = ({
 // // 		{
 // // 			roomList:[
 // // 				{
-// // 					roomID:'shiba',price:10,availableCount:10
+// // 					id:'shiba',price:10,available:10
 // // 				},
 // // 				{
-// // 					roomID:'shiba',price:10,availableCount:10
+// // 					id:'shiba',price:10,available:10
 // // 				},
 // // 				{
-// // 					roomID:'shiba',price:10,availableCount:10
+// // 					id:'shiba',price:10,available:10
 // // 				},
 // // 				{
-// // 					roomID:'shiba',price:10,availableCount:10
+// // 					id:'shiba',price:10,available:10
 // // 				}
 // // 			],
-// // 			guestCount:41
+// // 			guests:41
 // // 		}
 // // 	)
 // // )
@@ -347,50 +359,50 @@ export const roomAssignmentByRoomOccupancy = ({
 // 	{
 // 		roomList:[
 // 			{
-// 				roomID:'shiba',price:10,availableCount:10
+// 				id:'shiba',price:10,available:10
 // 			},
 // 			{
-// 				roomID:'shiba',price:20,availableCount:20
+// 				id:'shiba',price:20,available:20
 // 			},
 // 			{
-// 				roomID:'shiba',price:30,availableCount:30
+// 				id:'shiba',price:30,available:30
 // 			},
 // 			{
-// 				roomID:'shiba',price:40,availableCount:40
+// 				id:'shiba',price:40,available:40
 // 			}
 // 		],
-// 		guestCount:10,
+// 		guests:10,
 // 		query:10}
 // )))
-// // // returns [{"roomConfig":[{"roomID":"shiba","guestCount":69}],"price":420},{"roomConfig":[{"roomID":"doge","guestCount":114514}],"price":1919}]
+// // // returns [{"roomConfig":[{"id":"shiba","guests":69}],"price":420},{"roomConfig":[{"id":"doge","guests":114514}],"price":1919}]
 
 // // console.log(JSON.stringify(roomAssignmentByRoomOccupancy(
 // // 	{
 // // 		roomList:[
 // // 			// {
-// // 			// 	roomID:'27',price:10,availableCount:27
+// // 			// 	id:'27',price:10,available:27
 // // 			// },
 // // 			// {
-// // 			// 	roomID:'28',price:10,availableCount:28
+// // 			// 	id:'28',price:10,available:28
 // // 			// },
 // // 			// {
-// // 			// 	roomID:'29',price:10,availableCount:29
+// // 			// 	id:'29',price:10,available:29
 // // 			// },
 // // 			// {
-// // 			// 	roomID:'47',price:10,availableCount:40
+// // 			// 	id:'47',price:10,available:40
 // // 			// },
 // // 			{
-// // 				roomID:'48',price:20,availableCount:48
+// // 				id:'48',price:20,available:48
 // // 			},
 // // 			{
-// // 				roomID:'49',price:30,availableCount:49
+// // 				id:'49',price:30,available:49
 // // 			},
 // // 			{
-// // 				roomID:'50',price:40,availableCount:50
+// // 				id:'50',price:40,available:50
 // // 			}
 // // 		],
-// // 		guestCount:49,
+// // 		guests:49,
 // // 		query:30
 // // 	}
 // // )))
-// // // returns [ { roomID: 'shiba', guestCount: 114514 } ]
+// // // returns [ { id: 'shiba', guests: 114514 } ]
