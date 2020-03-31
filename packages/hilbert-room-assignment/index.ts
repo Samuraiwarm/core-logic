@@ -78,30 +78,62 @@ export const roomAssignmentByPrice = ({
 	}[] = [];
 	const roomListSorted = roomList.concat().sort((a, b) => a.price - b.price);
 	let pointerArray : number[] = [0, roomList.length];
+	let subsetRoomList = [roomListSorted[0]];
+	let currentBranchGuestCount = roomListSorted[0].available;
+	let remainingGuests = guests - currentBranchGuestCount;
 	
-
-	return [
-		{
-			roomConfig: [
-				{
-					id: 'shiba',
-					guests: 69,
-					price: 6969,
+	// Depth First Search - traverse on the tree of possible pointerArrays
+	while (result.length < query) {
+		// if more guests and can continue to next neighbor branch
+		if (remainingGuests > 0 && ((pointerArray[pointerArray.length-1] - pointerArray[pointerArray.length-2] !== 1))) {
+			pointerArray.splice(pointerArray.length-1, 0, pointerArray[pointerArray.length-2]+1);
+		} else { // no more neighbor branch
+			// end of branch because sufficient number of guests -> push to results
+			if (remainingGuests <= 0) {
+				const config = {
+					roomConfig: subsetRoomList.map(item =>
+						{
+							return {
+								id: item.id,
+								guests: item.available,
+								price: item.price,
+							}
+						}
+					).sort((a, b) => b.guests - a.guests),
+					totalPrice: 0
+				};
+				// more space than guests, set to remaining guests
+				config.roomConfig[config.roomConfig.length-1].guests += remainingGuests;
+				config.totalPrice = config.roomConfig.reduce((acc, val) => acc + val.guests*val.price, 0);
+				result.push(config);
+			}
+			// go to next branch
+			let pointer = pointerArray.length-1
+			for ( pointer = pointerArray.length-1; pointer > 0; pointer--) {
+				if ( pointerArray[pointer] - pointerArray[pointer-1] === 1) {
+					continue;
+				} else {
+					break;
 				}
-			],
-			totalPrice: 4040404,
-		},
-		{
-			roomConfig: [
-				{
-					id: 'doge',
-					guests: 114514,
-					price: 123
-				}
-			],
-			totalPrice: 123,
+			}
+			if (pointer === 0) { // cannot traverse anymore, return as is
+				return result;
+			}
+			if (pointer === pointerArray.length-1) { // still at leaf's parent branch [0,1,2,3,10] -> [0,1,2,4,10]
+				pointerArray[pointer-1]++;
+			} else {
+				// ex: [0,1,2,3,8,9,10] -> [0,1,2,4,10], pointerArrayRemovedBranch = [3,8,9], increment first index
+				let pointerArrayRemovedBranch = pointerArray.splice(pointer-1, pointerArray.length-pointer);
+				pointerArray.splice(pointer-1, 0, pointerArrayRemovedBranch[0]+1);
+			}
 		}
-	];
+		subsetRoomList = pointerArray.slice(0, pointerArray.length-1).map(item => roomListSorted[item]);
+		currentBranchGuestCount = subsetRoomList.reduce((acc, val) => acc + val.available, 0);
+
+		remainingGuests = guests - currentBranchGuestCount;
+	}
+
+	return result;
 }
 
 /**
@@ -284,15 +316,6 @@ export const roomAssignmentByRoomOccupancy = ({
 		if (a.roomConfig.length !== b.roomConfig.length) {
 			return a.roomConfig.length - b.roomConfig.length;
 		}
-		// if (a.roomConfig.length === 1 && b.roomConfig.length === 1) {
-		// 	return a.roomConfig[0].guests - b.roomConfig[0].guests;
-		// }
-		// if (a.roomConfig.length === 1) {
-		// 	return 1;
-		// }
-		// if (b.roomConfig.length === 1) {
-		// 	return -1;
-		// }
 		if (a.roomConfig.reduce((acc, val) => acc * val.guests, 1)
 		!== b.roomConfig.reduce((acc, val) => acc * val.guests, 1)) {
 			return b.roomConfig.reduce((acc, val) => acc * val.guests, 1)
@@ -301,33 +324,6 @@ export const roomAssignmentByRoomOccupancy = ({
 		return b.totalPrice - a.totalPrice;
 	});
 	return resultOneRoom.concat(resultMultipleRooms).slice(0, query);
-	// return [
-	// 	{
-	// 		roomConfig: [
-	// 			{
-	// 				id: 'shiba',
-	// 				guests: 114514,
-	// 				price: 1231,
-	// 			}
-	// 		],
-	// 		totalPrice: 1919
-	// 	},
-	// 	{
-	// 		roomConfig: [
-	// 			{
-	// 				id: 'doge',
-	// 				guests: 420,
-	// 				price: 123,
-	// 			},
-	// 			{
-	// 				id: 'uwu',
-	// 				guests: 69,
-	// 				price: 123,
-	// 			}
-	// 		],
-	// 		totalPrice: 810
-	// 	}
-	// ];
 }
 
 // // // Example uses
@@ -359,19 +355,19 @@ export const roomAssignmentByRoomOccupancy = ({
 // 	{
 // 		roomList:[
 // 			{
-// 				id:'shiba',price:10,available:10
+// 				id:'50',price:50,available:10
 // 			},
 // 			{
-// 				id:'shiba',price:20,available:20
+// 				id:'40',price:40,available:20
 // 			},
 // 			{
-// 				id:'shiba',price:30,available:30
+// 				id:'30',price:30,available:30
 // 			},
 // 			{
-// 				id:'shiba',price:40,available:40
+// 				id:'20',price:20,available:40
 // 			}
 // 		],
-// 		guests:10,
+// 		guests:91,
 // 		query:10}
 // )))
 // // // returns [{"roomConfig":[{"id":"shiba","guests":69}],"price":420},{"roomConfig":[{"id":"doge","guests":114514}],"price":1919}]
