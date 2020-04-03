@@ -2,7 +2,7 @@
  * Function checkAvailabilityOfHotel
  * check whether or not the hostel has enough space for given number of guests `guests`
  * @param {Object[]} roomList List of rooms available
- * @param {string} roomList[].id ID of rooms
+ * @param {number} roomList[].id ID of rooms
  * @param {number} roomList[].available Number of available beds in the room
  * @param {number} guests Number of guests to book
  * @returns {boolean} Is the number of available beds more than `guests`?
@@ -13,7 +13,7 @@ export const checkAvailabilityOfHotel = ({
 	guests,
 }: {
 	roomList: {
-		id: string;
+		id: number;
 		price: number;
 		available: number;
 	}[];
@@ -30,12 +30,12 @@ export const checkAvailabilityOfHotel = ({
  * => 1st rank (room1 * 5ppl & room2 * 3ppl)
  * => 2nd rank (room1 * 4ppl & room2 * 4ppl)
  * @param {Object[]} roomList List of rooms available
- * @param {string} roomList[].id ID of rooms
+ * @param {number} roomList[].id ID of rooms
  * @param {number} roomList[].price Price of room
  * @param {number} roomList[].available Number of available beds in the room
  * @param {number} guests Number of guests to book
  * @param {number} query Number of configurations for top `query` lowest price
- * @returns {Object[]: {roomConfig: {id: string, guests: number, price: number}[], totalPrice: number}[]}
+ * @returns {Object[]: {roomConfig: {id: number, guests: number, price: number}[], totalPrice: number}[]}
  * 		returns list of configurations `roomConfig` that includes the ID `id` and
  * 		the number of guests `guests` that will occupy in the room `id`, and
  * 		the price of each configurations
@@ -48,7 +48,7 @@ export const roomAssignmentByPrice = ({
 	query,
 }: {
 	roomList: {
-		id: string;
+		id: number;
 		price: number;
 		available: number;
 	}[];
@@ -56,7 +56,7 @@ export const roomAssignmentByPrice = ({
 	query: number;
 }) : {
 	roomConfig: {
-		id: string,
+		id: number,
 		guests: number,
 		price: number,
 	}[],
@@ -70,7 +70,7 @@ export const roomAssignmentByPrice = ({
 	}
 	let result : {
 		roomConfig: {
-			id: string,
+			id: number,
 			guests: number,
 			price: number,
 		}[],
@@ -155,12 +155,12 @@ export const roomAssignmentByPrice = ({
  * => 1st rank (room1 * 5ppl & room2 * 3ppl)
  * => 2nd rank (room1 * 4ppl & room2 * 4ppl)
  * @param {Object[]} roomList List of rooms available
- * @param {string} roomList[].id ID of rooms
+ * @param {number} roomList[].id ID of rooms
  * @param {number} roomList[].price Price of room
  * @param {number} roomList[].available Number of available beds in the room
  * @param {number} guests Number of guests to book.
  * @param {number} query Number of configurations for top `query` lowest price
- * @returns {Object[]: {roomConfig: {id: string, guests: number, price: number}[], totalPrice: number}[]}
+ * @returns {Object[]: {roomConfig: {id: number, guests: number, price: number}[], totalPrice: number}[]}
  * 		Returns list of configurations `roomConfig` that includes the ID `id` and
  * 		the number of guests `guests` that will occupy in the room `id`, and
  * 		the price of each configurations
@@ -173,7 +173,7 @@ export const roomAssignmentByRoomOccupancy = ({
 	query,
 }: {
 	roomList: {
-		id: string;
+		id: number;
 		price: number;
 		available: number;
 	}[];
@@ -181,7 +181,7 @@ export const roomAssignmentByRoomOccupancy = ({
 	query: number;
 }) : {
 	roomConfig: {
-		id: string,
+		id: number,
 		guests: number,
 		price: number,
 	}[],
@@ -195,7 +195,7 @@ export const roomAssignmentByRoomOccupancy = ({
 	}
 	let resultOneRoom : {
 		roomConfig: {
-			id: string,
+			id: number,
 			guests: number,
 			price: number,
 		}[],
@@ -203,7 +203,7 @@ export const roomAssignmentByRoomOccupancy = ({
 	}[] = [];
 	let resultMultipleRooms : {
 		roomConfig: {
-			id: string,
+			id: number,
 			guests: number,
 			price: number,
 		}[],
