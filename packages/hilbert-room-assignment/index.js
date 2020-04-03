@@ -171,7 +171,10 @@ exports.roomAssignmentByRoomOccupancy = function (_a) {
     // Greedy algorithm to select top rooms with highest `available`
     // Generate all subsets of an array of given length minimumRoomsNeeded
     while (resultOneRoom.length + resultMultipleRooms.length < query && minimumRoomsNeeded <= roomListSorted.length) {
-        var pointerArray = Array.apply(null, { length: minimumRoomsNeeded }).map(Number.call, Number);
+        var pointerArray = [];
+        for (var i = 0; i < minimumRoomsNeeded; i++) {
+            pointerArray.push(i);
+        }
         pointerArray.push(roomListSorted.length); // Boundary of array
         var isFillable = true;
         var pointerArrayPointer = 0;
