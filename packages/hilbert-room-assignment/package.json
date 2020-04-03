@@ -1,6 +1,6 @@
 {
   "name": "hilbert-room-assignment",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
