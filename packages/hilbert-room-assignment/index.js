@@ -62,7 +62,7 @@ exports.roomAssignmentByPrice = function (_a) {
                             guests: item.available,
                             price: item.price
                         };
-                    }).sort(function (a, b) { return b.guests - a.guests; }),
+                    }),
                     totalPrice: 0
                 };
                 // more space than guests, set to remaining guests
@@ -96,7 +96,7 @@ exports.roomAssignmentByPrice = function (_a) {
         currentBranchGuestCount = subsetRoomList.reduce(function (acc, val) { return acc + val.available; }, 0);
         remainingGuests = guests - currentBranchGuestCount;
     }
-    return result;
+    return result.sort(function (a, b) { return a.totalPrice - b.totalPrice; });
 };
 /**
  * Function roomAssignmentByRoomOccupancy

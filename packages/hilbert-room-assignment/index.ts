@@ -99,7 +99,7 @@ export const roomAssignmentByPrice = ({
 								price: item.price,
 							}
 						}
-					).sort((a, b) => b.guests - a.guests),
+					),
 					totalPrice: 0
 				};
 				// more space than guests, set to remaining guests
@@ -133,7 +133,7 @@ export const roomAssignmentByPrice = ({
 		remainingGuests = guests - currentBranchGuestCount;
 	}
 
-	return result;
+	return result.sort((a, b) => a.totalPrice - b.totalPrice);
 }
 
 /**
